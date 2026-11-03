@@ -1,0 +1,119 @@
+[project]
+name = "ha-funiculi"
+version = "0.1.0"
+description = "Denon AVR integration for Home Assistant that provides features exclusive to the Telnet API, e.g. power switch and source selection"
+readme = "README.md"
+authors = [{ name = "Claudia Pellegrino", email = "clau@tiqua.de" }]
+license = "Apache-2.0"
+# See https://pypi.org/pypi?%3Aaction=list_classifiers
+classifiers = ["Development Status :: 3 - Alpha", "Topic :: Home Automation"]
+requires-python = ">=3.14"
+
+dependencies = ["funiculi>=0.3.0"]
+
+[project.urls]
+documentation = "https://github.com/claui/ha-funiculi#readme"
+source = "https://github.com/claui/ha-funiculi"
+
+# This project is a Home Assistant custom integration, not a Python
+# package: without a build system, uv treats it as a virtual project
+# and only manages its dependency groups. Home Assistant installs the
+# `funiculi` requirement from PyPI per the integration manifest.
+[tool.uv.sources]
+funiculi = { path = "../funiculi", editable = true }
+
+[dependency-groups]
+dev = ["autopep8", "mypy", "poethepoet", "pylint", "ruff"]
+test = ["pytest", "pytest-homeassistant-custom-component"]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+ignore_missing_files = false
+tag = false
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version to {new_version}"
+allow_dirty = true
+commit = false
+message = "Bump version to {new_version}"
+moveable_tags = []
+commit_args = ""
+setup_hooks = []
+pre_commit_hooks = []
+post_commit_hooks = []
+
+[[tool.bumpversion.files]]
+filename = "custom_components/funiculi/manifest.json"
+search = "\"version\": \"{current_version}\""
+replace = "\"version\": \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+explicit_package_bases = true
+files = "custom_components/**/*.py,tests/**/*.py"
+implicit_reexport = false
+mypy_path = "."
+no_implicit_optional = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "pytest_homeassistant_custom_component.*"
+ignore_missing_imports = true
+
+[tool.poe]
+verbosity = -1
+
+[tool.poe.tasks]
+tasks.cmd = "poe -v"
+tasks.help = "List available tasks"
+formatcheck.cmd = "ruff format --check"
+formatcheck.help = "Check for formatting style violations not covered by the linter"
+linter.cmd = "pylint --enable-all-extensions custom_components tests"
+linter.help = "Check for style violations"
+tests.cmd = "pytest"
+tests.help = "Run test suite"
+typecheck.cmd = "mypy"
+typecheck.help = "Run static type checker"
+
+[tool.pylint]
+"messages control".disable = ["empty-comment", "useless-import-alias"]
+source-roots = ["."]
+
+[tool.pyright]
+reportUnsupportedDunderAll = "none"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = "tests"
+xfail_strict = true
+
+[tool.ruff]
+line-length = 72
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.uv]
+default-groups = ["dev", "test"]
+fork-strategy = "fewest"
+package = false

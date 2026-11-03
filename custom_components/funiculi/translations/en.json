@@ -1,0 +1,29 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "This amplifier is already configured."
+    },
+    "error": {
+      "cannot_connect": "Cannot reach the amplifier, or it did not answer the power status query."
+    },
+    "step": {
+      "user": {
+        "data": {
+          "host": "Host",
+          "port": "Control port",
+          "sources": "Source names (comma-separated)"
+        },
+        "description": "Connects to a Denon AVR over its telnet control protocol. Source names vary by model; check `funiculi source get` while the amp is set to a known source."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "sources": "Source names (comma-separated)"
+        }
+      }
+    }
+  }
+}
