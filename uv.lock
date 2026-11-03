@@ -1034,35 +1034,16 @@ wheels = [
 
 [[package]]
 name = "funiculi"
-version = "0.2.0"
-source = { editable = "../funiculi" }
+version = "0.3.1"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama" },
     { name = "fire" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "colorama" },
-    { name = "fire" },
+sdist = { url = "https://files.pythonhosted.org/packages/e7/b9/b64acd6e7433810ef8ee768019b80b2d75a25d4763e389883fc60f17ed8f/funiculi-0.3.1.tar.gz", hash = "sha256:1573a9547861d5f0f403e7ad6218e74b3032e264d5cdacafa5900c4bc0e7f3e7", size = 93023, upload-time = "2026-11-03T03:15:20.382Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/f1/f90027eb017093788e1c12abe9063e5c07a1c536c7b9874f68c45d0acc5b/funiculi-0.3.1-py3-none-any.whl", hash = "sha256:3d959f78ddcb8007e177ab55cf068f7017552ef62bba6c989c4b9bcdba2d0a9a", size = 15740, upload-time = "2026-11-03T03:15:18.786Z" },
 ]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "autopep8" },
-    { name = "mypy" },
-    { name = "poethepoet" },
-    { name = "pylint" },
-    { name = "ruff" },
-    { name = "types-colorama" },
-]
-doc = [
-    { name = "myst-parser" },
-    { name = "sphinx" },
-    { name = "sphinx-autoapi", specifier = ">=3.6.1" },
-    { name = "sphinx-rtd-theme" },
-]
-test = [{ name = "pytest" }]
 
 [[package]]
 name = "grpcio"
@@ -1127,7 +1108,7 @@ test = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "funiculi", editable = "../funiculi" }]
+requires-dist = [{ name = "funiculi", specifier = ">=0.3.0" }]
 
 [package.metadata.requires-dev]
 dev = [

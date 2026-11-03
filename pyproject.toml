@@ -19,9 +19,6 @@ source = "https://github.com/claui/ha-funiculi"
 # package: without a build system, uv treats it as a virtual project
 # and only manages its dependency groups. Home Assistant installs the
 # `funiculi` requirement from PyPI per the integration manifest.
-[tool.uv.sources]
-funiculi = { path = "../funiculi", editable = true }
-
 [dependency-groups]
 dev = ["autopep8", "mypy", "poethepoet", "pylint", "ruff"]
 test = ["pytest", "pytest-homeassistant-custom-component"]

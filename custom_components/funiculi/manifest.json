@@ -9,6 +9,6 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/claui/ha-funiculi/issues",
   "loggers": ["funiculi"],
-  "requirements": ["funiculi==0.3.0"],
+  "requirements": ["funiculi==0.3.1"],
   "version": "0.1.0"
 }
