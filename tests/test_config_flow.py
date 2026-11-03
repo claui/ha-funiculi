@@ -21,9 +21,15 @@ USER_INPUT = {
 
 async def test_user_flow_creates_entry(hass: HomeAssistant) -> None:
     """A reachable amp yields a config entry with parsed sources."""
-    with patch(
-        'custom_components.funiculi.config_flow.AsyncApi'
-    ) as mock_api:
+    with (
+        patch(
+            'custom_components.funiculi.config_flow.AsyncApi'
+        ) as mock_api,
+        patch(
+            'custom_components.funiculi.config_flow._async_fetch_title',
+            new=AsyncMock(return_value='Funiculi'),
+        ),
+    ):
         mock_api.return_value.status = AsyncMock(
             return_value='PWSTANDBY'
         )
@@ -35,7 +41,7 @@ async def test_user_flow_creates_entry(hass: HomeAssistant) -> None:
             result['flow_id'], user_input=USER_INPUT
         )
     assert result['type'] is FlowResultType.CREATE_ENTRY
-    assert result['title'] == '192.168.0.151'
+    assert result['title'] == 'Funiculi'
     assert result['data'] == {
         CONF_HOST: '192.168.0.151',
         CONF_PORT: 23,

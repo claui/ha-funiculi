@@ -1,9 +1,12 @@
 """The config flow for the Funiculi integration."""
 
+import re
 from typing import Any
 
+import aiohttp
 from funiculi import AsyncApi
 from funiculi.errors import FuniculiError
+from funiculi.settings import DEFAULT_UPNP_DESCRIPTOR_REMOTE_PATH
 import voluptuous as vol
 
 from homeassistant.config_entries import (
@@ -12,6 +15,8 @@ from homeassistant.config_entries import (
     OptionsFlow,
 )
 from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers import config_validation as cv
 
 from . import FuniculiConfigEntry
@@ -21,6 +26,10 @@ from .const import (
     DEFAULT_CTRL_PORT,
     DEFAULT_SOURCES,
     DOMAIN,
+)
+
+_FRIENDLY_NAME = re.compile(
+    r'<friendlyName>(?P<name>[^<]+)</friendlyName>'
 )
 
 _USER_SCHEMA = vol.Schema(
@@ -71,7 +80,7 @@ class FuniculiConfigFlow(ConfigFlow, domain=DOMAIN):
             self._abort_if_unique_id_configured()
             if (error := await _test_connection(host, port)) is None:
                 return self.async_create_entry(
-                    title=host,
+                    title=await _async_fetch_title(self.hass, host),
                     data={
                         CONF_HOST: host,
                         CONF_PORT: port,
@@ -146,3 +155,45 @@ async def _test_connection(host: str, port: int) -> str | None:
     except FuniculiError:
         return 'cannot_connect'
     return None if status else 'cannot_connect'
+
+
+async def _async_fetch_title(hass: HomeAssistant, host: str) -> str:
+    """Queries the amp’s UPnP description for a human-readable name.
+
+    :param hass: The running Home Assistant instance.
+
+    :param host: The AVR host to query.
+
+    :return:
+        The device’s friendly name, or `host` itself if the
+        description cannot be fetched or parsed.
+    """
+    session = async_get_clientsession(hass)
+    try:
+        text = await _async_fetch_description(session, host)
+    except aiohttp.ClientError, TimeoutError:
+        return host
+    match = _FRIENDLY_NAME.search(text)
+    return match.group('name').strip() if match else host
+
+
+async def _async_fetch_description(
+    session: aiohttp.ClientSession, host: str
+) -> str:
+    """Fetches the UPnP device description of an amp.
+
+    :param session: The HTTP session to query with.
+
+    :param host: The AVR host to query.
+
+    :return: The device description XML, as text.
+
+    :raises aiohttp.ClientError: if the request fails.
+
+    :raises TimeoutError: if the amp does not answer in time.
+    """
+    response = await session.get(
+        f'http://{host}:60006{DEFAULT_UPNP_DESCRIPTOR_REMOTE_PATH}',
+        timeout=aiohttp.ClientTimeout(total=5),
+    )
+    return await response.text()
