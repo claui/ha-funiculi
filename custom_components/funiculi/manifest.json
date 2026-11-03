@@ -1,6 +1,7 @@
 {
   "domain": "funiculi",
   "name": "Funiculi (Denon AVR Telnet)",
+  "categories": ["media_entertainment.speakers_audio"],
   "codeowners": ["@claui"],
   "config_flow": true,
   "documentation": "https://github.com/claui/ha-funiculi#readme",
@@ -8,7 +9,6 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/claui/ha-funiculi/issues",
   "loggers": ["funiculi"],
-  "categories": ["media_player"],
   "requirements": ["funiculi==0.3.0"],
   "version": "0.1.0"
 }
