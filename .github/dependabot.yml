@@ -1,0 +1,16 @@
+# Security updates only.
+#
+# This project's uv.lock pins Home Assistant's entire test dependency tree, so
+# scheduled version updates would churn constantly over packages that never run
+# on anybody's Home Assistant instance. Setting the limit to 0 turns off version
+# update pull requests; Dependabot security updates (enabled in the repository
+# settings) are subject to a separate, fixed limit and keep working, so advisory
+# fixes still arrive as pull requests. Routine version bumps are made
+# deliberately by hand instead.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
